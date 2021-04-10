@@ -10,13 +10,42 @@ namespace Lambda
     {
         static void Main(string[] args)
         {
-            VectorList<User> Users1 = new VectorList<User>(5);
-            Users1.elements[0] = new User { Id = 1, Name = "John", Phone = "1234567", Age = 20 };
-            Users1.elements[1] = new User { Id = 2, Name = "Jane", Phone = "4365745674", Age = 40 };
-            Users1.elements[2] = new User { Id = 3, Name = "Max", Phone = "34563546", Age = 60 };
-            Users1.elements[3] = new User { Id = 4, Name = "Eva", Phone = "96798", Age = 80 };
-            Users1.elements[4] = new User { Id = 5, Name = "Mickel", Phone = "3245", Age = 100 };
+            VectorList<User> Users = new VectorList<User>(5);
+            Users[0] = new User { Id = 1, Name = "John", Phone = "1234567", Age = 20 };
+            Users[1] = new User { Id = 2, Name = "Jane", Phone = "4365745674", Age = 40 };
+            Users[2] = new User { Id = 3, Name = "Max", Phone = "34563546", Age = 60 };
+            Users[3] = new User { Id = 4, Name = "Eva", Phone = "96798", Age = 80 };
+            Users[4] = new User { Id = 5, Name = "Mickel", Phone = "3245", Age = 100 };
+
+            VectorList<UserPhone> tu = new VectorList<UserPhone>(Users.Length);
+            for(int i=0;i<Users.Length;i++)
+            {
+                tu[i] = fff(Users[i]);
+            }
+
+            var tu1 = Users.Select(x => new { User = x.Name, Phone = long.Parse(x.Phone)});
         }
+
+        public static UserPhone fff(User u)
+        {
+            UserPhone tf = new UserPhone();
+            tf.Phone = long.Parse(u.Phone);
+            tf.User = u.Name;
+
+            return tf;
+        }
+
+        public int test2 (int x) => x * x;
+        public int test(int x)
+        {
+            return x * x;
+        }
+    }
+
+    public class UserPhone
+    {
+        public String User { get; set; }
+        public long Phone { get; set; }
     }
 
     public class User
@@ -25,15 +54,58 @@ namespace Lambda
         public string Name { get; set; }
         public string Phone { get; set; }
         public int Age { get; set; }
+
+        public static User operator +(User a, User b)
+        {
+            return new User
+            {
+                Age = a.Age + b.Age,
+                Id = a.Id + b.Id,
+                Name = a.Name + b.Name,
+                Phone = (long.Parse(a.Phone) + long.Parse(b.Phone)).ToString()
+            };
+        }
     }
+
+
 
     public class VectorList<T>
     {
         public T[] elements;
 
+        public T this[int x]
+        {
+            get
+            {
+                return elements[x];
+            }
+            set 
+            {
+                elements[x] = value;
+            }
+        }
         public VectorList(int count)
         {
             elements = new T[count];
+        }
+
+        public VectorList<Tunknown> Select<Tunknown>(Func<T,Tunknown> f)
+        {
+            VectorList<Tunknown> tu = new VectorList<Tunknown>(this.Length);
+            for (int i = 0; i < this.Length; i++)
+            {
+                tu[i] = f(elements[i]);
+            }
+            return tu;
+        }
+
+        public int Length 
+        { 
+            get
+            {
+                return elements.Length;
+            }
+            private set { }
         }
     }
 }
