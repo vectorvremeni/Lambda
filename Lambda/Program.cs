@@ -17,22 +17,9 @@ namespace Lambda
             Users[3] = new User { Id = 4, Name = "Eva", Phone = "96798", Age = 80 };
             Users[4] = new User { Id = 5, Name = "Mickel", Phone = "3245", Age = 100 };
 
-            VectorList<UserPhone> tu = new VectorList<UserPhone>(Users.Length);
-            for(int i=0;i<Users.Length;i++)
-            {
-                tu[i] = fff(Users[i]);
-            }
+            var tu1 = Users.Select(x => new { User = x.Name, Phone = long.Parse(x.Phone) });
 
-            var tu1 = Users.Select(x => new { User = x.Name, Phone = long.Parse(x.Phone)});
-        }
-
-        public static UserPhone fff(User u)
-        {
-            UserPhone tf = new UserPhone();
-            tf.Phone = long.Parse(u.Phone);
-            tf.User = u.Name;
-
-            return tf;
+            var olds = Users.Where(x => x.Age > 40).Where(x => x.Age < 80).Select(x => new { User = x.Name, Phone = long.Parse(x.Phone) });
         }
 
         public int test2 (int x) => x * x;
@@ -97,6 +84,27 @@ namespace Lambda
                 tu[i] = f(elements[i]);
             }
             return tu;
+        }
+
+        public VectorList<T> Where(Func<T,bool> f)
+        {
+            int[] selected = new int[Length];
+            int count = 0;
+            for(int i=0;i<Length;i++)
+            {
+                if(f(elements[i]))
+                {
+                    selected[count] = i;
+                    count++;
+                }
+            }
+
+            VectorList<T> res = new VectorList<T>(count);
+            for(int i=0;i<count;i++)
+            {
+                res[i] = elements[selected[i]];
+            }
+            return res;
         }
 
         public int Length 
