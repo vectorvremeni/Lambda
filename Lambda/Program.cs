@@ -20,6 +20,11 @@ namespace Lambda
             var tu1 = Users.Select(x => new { User = x.Name, Phone = long.Parse(x.Phone) });
 
             var olds = Users.Where(x => x.Age > 40).Where(x => x.Age < 80).Select(x => new { User = x.Name, Phone = long.Parse(x.Phone) });
+
+            Users.ForEach(x =>
+            {
+                Console.WriteLine(x.Name);
+            });
         }
 
         public int test2 (int x) => x * x;
@@ -105,6 +110,14 @@ namespace Lambda
                 res[i] = elements[selected[i]];
             }
             return res;
+        }
+
+        public void ForEach(Action<T> f)
+        {
+            for (int i = 0; i < this.Length; i++)
+            {
+                f(elements[i]);
+            }
         }
 
         public int Length 
