@@ -38,6 +38,23 @@ namespace LambdaTest
             Assert.AreEqual("def", vres[0].A);
             Assert.AreEqual("ghi", vres[1].A);
         }
+
+        [TestMethod]
+        public void Lambda_Any()
+        {
+            VectorList<TestType> vl = new VectorList<TestType>(3);
+            vl[0] = new TestType { A = "abc", B = 1, C = 1.5 };
+            vl[1] = new TestType { A = "afb", B = 2, C = 2.5 };
+            vl[2] = new TestType { A = "ghbi", B = 3, C = 3.5 };
+
+            bool b1 = vl.Any(x => x.B == 3);
+
+            Assert.AreEqual(true, b1);
+
+            bool b2 = vl.Any(x => x.A.Contains("ab"));
+
+            Assert.AreEqual(true, b2);
+        }
     }
 
     public class TargetType
