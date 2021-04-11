@@ -22,17 +22,14 @@ namespace Lambda
             var olds = Users.Where(x => x.Age > 40).Where(x => x.Age < 80).Select(x => new { User = x.Name, Phone = long.Parse(x.Phone) });
         }
 
-        public int test2 (int x) => x * x;
+        //пример функции
         public int test(int x)
         {
             return x * x;
         }
-    }
 
-    public class UserPhone
-    {
-        public String User { get; set; }
-        public long Phone { get; set; }
+        //та же функция только в виде лямбды
+        public int test2(int x) => x * x;
     }
 
     public class User
@@ -42,6 +39,7 @@ namespace Lambda
         public string Phone { get; set; }
         public int Age { get; set; }
 
+        //перегрузка операторов
         public static User operator +(User a, User b)
         {
             return new User
@@ -53,8 +51,6 @@ namespace Lambda
             };
         }
     }
-
-
 
     public class VectorList<T>
     {
@@ -81,7 +77,7 @@ namespace Lambda
             VectorList<Tunknown> tu = new VectorList<Tunknown>(this.Length);
             for (int i = 0; i < this.Length; i++)
             {
-                tu[i] = f(elements[i]);
+                tu[i] = f(this[i]);
             }
             return tu;
         }
@@ -92,7 +88,7 @@ namespace Lambda
             int count = 0;
             for(int i=0;i<Length;i++)
             {
-                if(f(elements[i]))
+                if(f(this[i]))
                 {
                     selected[count] = i;
                     count++;
@@ -102,9 +98,29 @@ namespace Lambda
             VectorList<T> res = new VectorList<T>(count);
             for(int i=0;i<count;i++)
             {
-                res[i] = elements[selected[i]];
+                res[i] = this[selected[i]];
             }
             return res;
+        }
+
+        public void ForEach(Action<T> f)
+        {
+            for(int i=0;i<Length;i++)
+            {
+                f(this[i]);
+            }
+        }
+
+        public bool Any(Func<T,bool> f)
+        {
+            for(int i=0;i<Length;i++)
+            {
+                if(f(this[i]))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public int Length 
